@@ -56,26 +56,30 @@
     <body>
         <div class="header-container">
             <div class="header-content">
-              <h1>SpatialReasoner</h1>
+              <h1>SpatialReasoner: Towards Explicit and Generalizable 3D Spatial Reasoning</h1>
               <h3>Technical Report</h3>
               <p>
-                <a href="https://wufeim.github.io" target="_blank" style="text-decoration: none;">Wufei Ma<sup>1</sup></a> &emsp;
-                <a href="https://www.linkedin.com/in/haoyuchen050400/en" target="_blank" style="text-decoration: none;">Haoyu Chen<sup>2</sup></a> &emsp;
-                <a href="https://openreview.net/profile?id=~Guofeng_Zhang4" target="_blank" style="text-decoration: none;">Guofeng Zhang<sup>1</sup></a> &emsp;
+                <a href="https://wufeim.github.io" target="_blank" style="text-decoration: none; color: #002D72;"><b>Wufei Ma<sup>*</sup></b></a> &emsp;
+                <a href="https://sites.google.com/view/yu-cheng-chou" target="_blank" style="text-decoration: none; color: #002D72;"><b>Yu-Cheng Chou<sup>*</sup></b></a> &emsp;
+                <a href="https://qihao067.github.io" target="_blank" style="text-decoration: none; color: #002D72;"><b>Qihao Liu<sup>*</sup></b></a> &emsp;
+                <a href="https://xingruiwang.github.io" target="_blank" style="text-decoration: none; color: #002D72;"><b>Xingrui Wang</b></a>
                 <br>
-                <a href="https://celsodemelo.net/" target="_blank" style="text-decoration: none;">Celso Miguel de Melo<sup>3</sup></a> &emsp;
-                <a href="https://www.cs.jhu.edu/~ayuille/" target="_blank" style="text-decoration: none;">Alan Yuille<sup>1</sup></a> &emsp;
-                <a href="https://beckschen.github.io" target="_blank" style="text-decoration: none;">Jieneng Chen<sup>1</sup></a>
+                <a href="https://celsodemelo.net" target="_blank" style="text-decoration: none; color: #002D72;"><b>Celso de Melo<sup>†</sup></b></a> &emsp;
+                <a href="https://beckschen.github.io" target="_blank" style="text-decoration: none; color: #002D72;"><b>Jieneng Chen</b></a> &emsp;
+                <a href="http://www.stat.ucla.edu/~jxie/" target="_blank" style="text-decoration: none; color: #002D72;;"><b>Jianwen Xie<sup>o</sup></b></a> &emsp;
+                <a href="https://www.cs.jhu.edu/~ayuille/" target="_blank" style="text-decoration: none; color: #002D72;"><b>Alan Yuille</b></a>
                 <br>
                 <br>
-                <a href="https://www.cs.jhu.edu" target="_blank" style="text-decoration: none;"><sup>1</sup>Johns Hopkins University</a> &emsp;
-                <a href="https://www.cmu.edu" target="_blank" style="text-decoration: none;"><sup>2</sup>Carnegie Mellon University</a>
+                <a href="https://www.cs.jhu.edu" target="_blank" style="text-decoration: none; color: #002D72;">Johns Hopkins University</a>
                 <br>
-                <a href="https://arl.devcom.army.mil" target="_blank" style="text-decoration: none;"><sup>3</sup>DEVCOM Army Research Laboratory</a>
+                <a href="https://arl.devcom.army.mil" target="_blank" style="text-decoration: none; color: #002D72;"><sup>†</sup>DEVCOM Army Research Laboratory</a> &emsp;
+                <a href="https://lambda.ai" target="_blank" style="text-decoration: none; color: #002D72;"><sup>o</sup>Lambda Inc</a>
+                <br>
+                <sup>*</sup>Equal contribution
               </p>
               <div class="button-container">
-                <a href="https://arxiv.org/abs/2412.07825" class="button" target="_blank">arXiv</a>
-                <a href="https://arxiv.org/abs/2412.07825" class="button" target="_blank">Code & Data</a>
+                <a href="#" class="button" target="_blank">arXiv</a>
+                <a href="#opensource" class="button">Code & Data</a>
               </div>
             </div>
         </div>
@@ -83,8 +87,6 @@
         <d-contents style="margin-top: 0px;">
             <nav>
                 <h4>Contents</h4>
-                <div><a href="#explore">Explore</a></div>
-                <div><a href="#data">3DSRBench</a></div>
                 <div><a href="#key-findings">Key Findings</a></div>
                 <div><a href="#opensource">Open Source</a></div>
                 <div><a href="#misc">Miscellaneous</a></div>
@@ -92,100 +94,20 @@
         </d-contents>
 
         <p style="text-align: justify;">
-            We present 3DSRBench, a new 3D spatial reasoning benchmark that significantly advances the evaluation of 3D spatial reasoning capabilities of LMMs by manually annotating 2,100 VQAs on MS-COCO images <d-cite key="lin2014microsoft"></d-cite> and 672 on multi-view synthetic images rendered from HSSD <d-cite key="khanna2023hssd"></d-cite>. Experimental results on different splits of our 3DSRBench provide valuable findings and insights that will benefit future research on 3D spatially intelligent LMMs.
+            we introduce SpatialReasoner, a novel large vision-language model (LVLM) that address 3D spatial reasoning with explicit 3D representations shared between stages -- 3D perception, computation, and reasoning. Explicit 3D representations provide a coherent interface that supports advanced 3D spatial reasoning and enable us to study the factual errors made by LVLMs.
         </p>
         <d-figure id="fig1">
             <figure>
-                <img src="assets/images/teaser.png" alt="Our RCAD" style="object-fit: contain;">
+                <img src="assets/images/motivation_thinking.png" alt="Motivation" style="object-fit: contain;">
                 <figcaption>
-                    <b>Figure 1.</b> Overview of our 3DSRBench.
+                    <b>Figure 1.</b> Comparing 3D spatial reasoning of our SpatialReasoner with previous state-of-the-art models.
                 </figcaption>
             </figure>
         </d-figure>
 
-        <section id="explore">
-            <h2 id="explore">Explore</h2>
-            <p styel="text-align: justify;">
-                Explore data from <a href="https://huggingface.co/datasets/ccvl/3DSRBench">huggingface.co</a>. <i>Demo coming soon...</i>
-            </p>
-            <!-- <d-figure id="fig2">
-                <figure>
-                    <img src="assets/images/egs_01.jpg" alt="3DSRBench">
-                    <img src="assets/images/egs_02.jpg" alt="3DSRBench">
-                    <img src="assets/images/egs_03.jpg" alt="3DSRBench">
-                    <figcaption>
-                        <b>Figure 2.</b> Qualitative examples from our 3DSRBench.
-                    </figcaption>
-                </figure>
-            </d-figure> -->
-        </section>
-
-        <section id="data">
-            <h2 id="data">3DSRBench</h2>
-            <p style="text-align: justify;">
-                3D spatial reasoning is the ability to analyze and interpret the positions, orientations, and spatial relationships of objects within the 3D space. This allows models to develop a comprehensive understanding of the 3D scene, enabling their applicability to a broader range of areas, such as autonomous navigation, robotics, and AR/VR.
-            </p>
-
-            <p style="text-align: justify;">
-                We present the first comprehensive 3D spatial reasoning benchmark, 3DSRBench, that features <b>2,762</b> manually annotated 3D spatial reasoning questions on <b>diverse and open-vocabulary entities</b>, including rigid objects, humans, animals, and implicit concepts, such as logo on a car or arrow on a billboard.
-            </p>
-
-            <p style="text-align: justify;">
-                <b style="color: #002D72;">Scope of 3DSRBench.</b> With 3DSRBench we hope to enable the following: (1) <u>a robust and comprehensive evaluation of 3D spatial reasoning capabilities</u> of state-of-the-art LMMs; (2) studying the <u>robustness of 3D spatial reasoning capabilities w.r.t. common and uncommon camera 6D viewpoints</u>, which is a crucial ability when deployed to downstream tasks in embodied AI and robotics; and (3) <u>a diagnosis benchmark</u> to study the 3D awareness of visual encoders and reasoning abilities of LLMs, shedding light on downstream tasks that build on 3D spatial reasoning, such as automatic navigation and robotic manipulation.
-            </p>
-
-            <p style="text-align: justify;">
-                <b style="color: #002D72;">Dataset splits.</b> Our 3DSRBench consists of three splits, a <u>real</u> with 2,100 VQAs on MS-COCO images and two <u>synthetic</u> splits with VQAs on multi-view images rendered with "common" and "uncommon" camera 6D viewpoints of the same 3D scene. We define "common" camera viewpoints as ones positioned at the eye level with natural viewing angles, which are well populated in common image datasets, and others as "uncommon" viewpoints
-            </p>
-
-            <d-figure id="fig3">
-                <figure>
-                    <img src="assets/images/hssd_eg2.png" alt="Our RCAD">
-                    <img src="assets/images/hssd_eg3.png" alt="Our RCAD">
-                    <figcaption>
-                        <b>Figure 2.</b> Qualitative examples from the two synthetic splits of our 3DSRBench with common and uncommon camera viewpoints of the same 3D scene.
-                    </figcaption>
-                </figure>
-            </d-figure>
-
-            <p style="text-align: justify;">
-                <b style="color: #002D72;">Design considerations. (See <a href="#fig4">Figure 3</a>.)</b> As a manually annotated dataset, our 3DSRBench incorporates the following three key designs: (1) we <u>avoid questions with trivial answers</u>; (2) we adopt <u>a balanced data distribution in various aspects</u>, removing priors in the answer distribution, <i>e.g.</i>, pedestrians are often located lower than street lights, or the fact that objects higher in 3D space are also higher in 2D image plane; and (3) <u>robust evaluation strategies</u>, such as CircularEval <d-cite key="liu2025mmbench"></d-cite> and our novel FlipEval.
-            </p>
-
-            <d-figure id="fig4">
-                <figure>
-                    <img src="assets/images/3dsrbench-teaser-b.png" alt="Our RCAD" style="max-height: 360px; object-fit: contain;">
-                    <figcaption>
-                        <b>Figure 3.</b> Illustration of our key designs. Top: balanced data distrubtion with complementary pairs. Bottom: our novel FlipEval for robust evaluation.
-                    </figcaption>
-                </figure>
-            </d-figure>
-
-            <p style="text-align: justify;">
-                <b style="color: #002D72;">Question types. (See <a href="#fig1">Figure 1</a>.)</b> Our 3DSRBench consists of 12 subtypes of questions from 4 main categories, <i>i.e.</i>, height, location, orientation, and multi-object reasoning. Each category of questions focuses on different combinations of 3D properties, such as object 3D location, 3D ground plane, camera extrinsic calibration, and/or object 3D poses.
-            </p>
-
-        </section>
-
-        <section id="opensource">
-            <h2 id="opensource">Open Source</h2>
-            <p style="text-align: justify;">
-                <b style="color: #002D72; position: relative; top: -3px;">SpatialReasoner codebase.</b> <img alt="Static Badge" src="https://img.shields.io/badge/GitHub-SpatialReasoner-000?logo=github&logoColor=fff">
-            </p>
-            <p style="text-align: justify;">
-                <b style="color: #002D72; position: relative; top: -3px;">Synthetic 3D data generation pipeline.</b> <img alt="Static Badge" src="https://img.shields.io/badge/GitHub-SpatialReasonerDataGen-000?logo=github&logoColor=fff">
-            </p>
-            <p style="text-align: justify;">
-                <b style="color: #002D72; position: relative; top: -3px;">SpatialReasoner models.</b> <img alt="Static Badge" src="https://img.shields.io/badge/Hugging%20Face-SpatialReasoner-FFD21E?logo=huggingface">
-            </p>
-            <p style="text-align: justify;">
-                <b style="color: #002D72; position: relative; top: -3px;">SpatialReasoner data.</b> <img alt="Static Badge" src="https://img.shields.io/badge/Hugging%20Face-SpatialReasoner%20Data-FFD21E?logo=huggingface">
-            </p>
-        </section>
-
         <section id="key-findings">
             <h2 id="key-findings">Key Findings</h2>
-            <p style="text-align: justify;">
+            <!-- <p style="text-align: justify;">
                 <b style="color: #002D72;">State-of-the-art LMMs demonstrate limited 3D spatial reasoning capabilties.</b>
             </p>
             <div id="tab:model_ensemble" style="display: flex; flex-direction: column; align-items: center;">
@@ -459,14 +381,31 @@
                         <b>Figure 4.</b> Failure cases of GPT-4o on our 3DSRBench dataset.
                     </figcaption>
                 </figure>
-            </d-figure>
+            </d-figure>-->
 
+        </section>
+
+        <section id="opensource">
+            <h2 id="opensource">Open Source</h2>
+            <p><em>Coming soon.</em></p>
+            <p style="text-align: justify;">
+                <b style="color: #002D72; position: relative; top: -3px;">SpatialReasoner codebase.</b> <img alt="Static Badge" src="https://img.shields.io/badge/GitHub-SpatialReasoner-000?logo=github&logoColor=fff">
+            </p>
+            <p style="text-align: justify;">
+                <b style="color: #002D72; position: relative; top: -3px;">Synthetic 3D data generation pipeline.</b> <img alt="Static Badge" src="https://img.shields.io/badge/GitHub-SpatialReasonerDataGen-000?logo=github&logoColor=fff">
+            </p>
+            <p style="text-align: justify;">
+                <b style="color: #002D72; position: relative; top: -3px;">SpatialReasoner models.</b> <img alt="Static Badge" src="https://img.shields.io/badge/Hugging%20Face-SpatialReasoner-FFD21E?logo=huggingface">
+            </p>
+            <p style="text-align: justify;">
+                <b style="color: #002D72; position: relative; top: -3px;">SpatialReasoner data.</b> <img alt="Static Badge" src="https://img.shields.io/badge/Hugging%20Face-SpatialReasoner%20Data-FFD21E?logo=huggingface">
+            </p>
         </section>
 
         <section id="misc">
             <h2 id="misc">Miscellaneous</h2>
             <p style="text-align: justify;">
-                <b>License.</b> Our 3DSRBench is released under the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a> license. By accessing and using our 3DSRBench, you agree to follow the terms of access specified <a href="https://creativecommons.org/licenses/by/4.0/legalcode.en">here</a>.
+                <b>License.</b> Our SpatialReasoner and SpatialReasonerDataGen is released under the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a> license. By accessing and using our SpatialReasoner and SpatialReasonerDataGen, you agree to follow the terms of access specified <a href="https://creativecommons.org/licenses/by/4.0/legalcode.en">here</a>.
             </p>
             <p style="text-align: justify;">
                 <b>Ethics.</b> We follow the ethics guidelines at Johns Hopkins University and obtained Institutional Review Board (IRB) approvals prior to the start of our work. We described potential risks to the annotators and explained the purpose of the study and how the collected data would be used. All annotators agreed to join this project voluntarily and were paid by a fair amount as required at our institution.
@@ -477,12 +416,7 @@
         <d-appendix>
             <h3>BibTeX</h3>
             <p class="bibtex">
-                @article{ma20243dsrbench,
-                &nbsp;&nbsp;title={3DSRBench: A Comprehensive 3D Spatial Reasoning Benchmark},
-                &nbsp;&nbsp;author={Ma, Wufei and Chen, Haoyu and Zhang, Guofeng and de Melo, Celso M and Yuille, Alan and Chen, Jieneng},
-                &nbsp;&nbsp;journal={arXiv preprint arXiv:2412.07825},
-                &nbsp;&nbsp;year={2024}
-                }
+                <em>pending</em>
             </p>
 
             <h3>Notes</h3>
