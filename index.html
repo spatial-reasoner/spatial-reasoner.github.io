@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SpatialReasoner</title>
+        <script src="template.v2.js"></script>
+        <link rel="icon" href="assets/jhu.png" type="image/png" sizes="128x128">
+        <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
+        <!-- <script src="https://d3js.org/d3-collection.v1.min.js"></script> -->
+        <script src="https://rawgit.com/nstrayer/slid3r/master/dist/slid3r.js"></script>
+        <script src="cross_fade.js"></script>
+        <link rel="stylesheet" href="style.css">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+            onload="renderMathInElement(document.body);">
+        </script>
+        <script src="assets/js/mesh_viewer.js"></script>
+        <script src="assets/js/splide.min.js"></script>
+        <script src="assets/js/transition.js"></script>
+        <link rel="stylesheet" href="assets/styles/style.css">
+        <link rel="stylesheet" href="assets/styles/splide.min.css">
+        <!-- <link rel="stylesheet" href="assets/styles/bulma.min.css"> -->
+        <script type="module" src="https://unpkg.com/@google/model-viewer@2.0.1/dist/model-viewer.min.js"></script>
+        <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
+        <style>
+            .slider-container {
+                margin: auto; /* Centers the container */
+                width: 80%; /* Adjust this to set the container's width */
+            }
+
+            input[type=range].styled-slider {
+                width: 100%; /* Makes the slider take the full width of its container */
+                /* Add any other styling for the slider here */
+            }
+
+            .button:hover span {
+                color: rgb(255, 204, 0);
+            }
+            .external-link.button.is-normal.is-rounded:hover {
+                color: rgb(255, 204, 0);
+            }
+        </style>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-HDJG4NZZ3F"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-HDJG4NZZ3F');
+        </script>
+    </head>
+    <body>
+        <div class="header-container">
+            <div class="header-content">
+              <h1>SpatialReasoner</h1>
+              <h3>Technical Report</h3>
+              <p>
+                <a href="https://wufeim.github.io" target="_blank" style="text-decoration: none;">Wufei Ma<sup>1</sup></a> &emsp;
+                <a href="https://www.linkedin.com/in/haoyuchen050400/en" target="_blank" style="text-decoration: none;">Haoyu Chen<sup>2</sup></a> &emsp;
+                <a href="https://openreview.net/profile?id=~Guofeng_Zhang4" target="_blank" style="text-decoration: none;">Guofeng Zhang<sup>1</sup></a> &emsp;
+                <br>
+                <a href="https://celsodemelo.net/" target="_blank" style="text-decoration: none;">Celso Miguel de Melo<sup>3</sup></a> &emsp;
+                <a href="https://www.cs.jhu.edu/~ayuille/" target="_blank" style="text-decoration: none;">Alan Yuille<sup>1</sup></a> &emsp;
+                <a href="https://beckschen.github.io" target="_blank" style="text-decoration: none;">Jieneng Chen<sup>1</sup></a>
+                <br>
+                <br>
+                <a href="https://www.cs.jhu.edu" target="_blank" style="text-decoration: none;"><sup>1</sup>Johns Hopkins University</a> &emsp;
+                <a href="https://www.cmu.edu" target="_blank" style="text-decoration: none;"><sup>2</sup>Carnegie Mellon University</a>
+                <br>
+                <a href="https://arl.devcom.army.mil" target="_blank" style="text-decoration: none;"><sup>3</sup>DEVCOM Army Research Laboratory</a>
+              </p>
+              <div class="button-container">
+                <a href="https://arxiv.org/abs/2412.07825" class="button" target="_blank">arXiv</a>
+                <a href="https://arxiv.org/abs/2412.07825" class="button" target="_blank">Code & Data</a>
+              </div>
+            </div>
+        </div>
+    <d-article>
+        <d-contents style="margin-top: 0px;">
+            <nav>
+                <h4>Contents</h4>
+                <div><a href="#explore">Explore</a></div>
+                <div><a href="#data">3DSRBench</a></div>
+                <div><a href="#key-findings">Key Findings</a></div>
+                <div><a href="#opensource">Open Source</a></div>
+                <div><a href="#misc">Miscellaneous</a></div>
+            </nav>
+        </d-contents>
+
+        <p style="text-align: justify;">
+            We present 3DSRBench, a new 3D spatial reasoning benchmark that significantly advances the evaluation of 3D spatial reasoning capabilities of LMMs by manually annotating 2,100 VQAs on MS-COCO images <d-cite key="lin2014microsoft"></d-cite> and 672 on multi-view synthetic images rendered from HSSD <d-cite key="khanna2023hssd"></d-cite>. Experimental results on different splits of our 3DSRBench provide valuable findings and insights that will benefit future research on 3D spatially intelligent LMMs.
+        </p>
+        <d-figure id="fig1">
+            <figure>
+                <img src="assets/images/teaser.png" alt="Our RCAD" style="object-fit: contain;">
+                <figcaption>
+                    <b>Figure 1.</b> Overview of our 3DSRBench.
+                </figcaption>
+            </figure>
+        </d-figure>
+
+        <section id="explore">
+            <h2 id="explore">Explore</h2>
+            <p styel="text-align: justify;">
+                Explore data from <a href="https://huggingface.co/datasets/ccvl/3DSRBench">huggingface.co</a>. <i>Demo coming soon...</i>
+            </p>
+            <!-- <d-figure id="fig2">
+                <figure>
+                    <img src="assets/images/egs_01.jpg" alt="3DSRBench">
+                    <img src="assets/images/egs_02.jpg" alt="3DSRBench">
+                    <img src="assets/images/egs_03.jpg" alt="3DSRBench">
+                    <figcaption>
+                        <b>Figure 2.</b> Qualitative examples from our 3DSRBench.
+                    </figcaption>
+                </figure>
+            </d-figure> -->
+        </section>
+
+        <section id="data">
+            <h2 id="data">3DSRBench</h2>
+            <p style="text-align: justify;">
+                3D spatial reasoning is the ability to analyze and interpret the positions, orientations, and spatial relationships of objects within the 3D space. This allows models to develop a comprehensive understanding of the 3D scene, enabling their applicability to a broader range of areas, such as autonomous navigation, robotics, and AR/VR.
+            </p>
+
+            <p style="text-align: justify;">
+                We present the first comprehensive 3D spatial reasoning benchmark, 3DSRBench, that features <b>2,762</b> manually annotated 3D spatial reasoning questions on <b>diverse and open-vocabulary entities</b>, including rigid objects, humans, animals, and implicit concepts, such as logo on a car or arrow on a billboard.
+            </p>
+
+            <p style="text-align: justify;">
+                <b style="color: #002D72;">Scope of 3DSRBench.</b> With 3DSRBench we hope to enable the following: (1) <u>a robust and comprehensive evaluation of 3D spatial reasoning capabilities</u> of state-of-the-art LMMs; (2) studying the <u>robustness of 3D spatial reasoning capabilities w.r.t. common and uncommon camera 6D viewpoints</u>, which is a crucial ability when deployed to downstream tasks in embodied AI and robotics; and (3) <u>a diagnosis benchmark</u> to study the 3D awareness of visual encoders and reasoning abilities of LLMs, shedding light on downstream tasks that build on 3D spatial reasoning, such as automatic navigation and robotic manipulation.
+            </p>
+
+            <p style="text-align: justify;">
+                <b style="color: #002D72;">Dataset splits.</b> Our 3DSRBench consists of three splits, a <u>real</u> with 2,100 VQAs on MS-COCO images and two <u>synthetic</u> splits with VQAs on multi-view images rendered with "common" and "uncommon" camera 6D viewpoints of the same 3D scene. We define "common" camera viewpoints as ones positioned at the eye level with natural viewing angles, which are well populated in common image datasets, and others as "uncommon" viewpoints
+            </p>
+
+            <d-figure id="fig3">
+                <figure>
+                    <img src="assets/images/hssd_eg2.png" alt="Our RCAD">
+                    <img src="assets/images/hssd_eg3.png" alt="Our RCAD">
+                    <figcaption>
+                        <b>Figure 2.</b> Qualitative examples from the two synthetic splits of our 3DSRBench with common and uncommon camera viewpoints of the same 3D scene.
+                    </figcaption>
+                </figure>
+            </d-figure>
+
+            <p style="text-align: justify;">
+                <b style="color: #002D72;">Design considerations. (See <a href="#fig4">Figure 3</a>.)</b> As a manually annotated dataset, our 3DSRBench incorporates the following three key designs: (1) we <u>avoid questions with trivial answers</u>; (2) we adopt <u>a balanced data distribution in various aspects</u>, removing priors in the answer distribution, <i>e.g.</i>, pedestrians are often located lower than street lights, or the fact that objects higher in 3D space are also higher in 2D image plane; and (3) <u>robust evaluation strategies</u>, such as CircularEval <d-cite key="liu2025mmbench"></d-cite> and our novel FlipEval.
+            </p>
+
+            <d-figure id="fig4">
+                <figure>
+                    <img src="assets/images/3dsrbench-teaser-b.png" alt="Our RCAD" style="max-height: 360px; object-fit: contain;">
+                    <figcaption>
+                        <b>Figure 3.</b> Illustration of our key designs. Top: balanced data distrubtion with complementary pairs. Bottom: our novel FlipEval for robust evaluation.
+                    </figcaption>
+                </figure>
+            </d-figure>
+
+            <p style="text-align: justify;">
+                <b style="color: #002D72;">Question types. (See <a href="#fig1">Figure 1</a>.)</b> Our 3DSRBench consists of 12 subtypes of questions from 4 main categories, <i>i.e.</i>, height, location, orientation, and multi-object reasoning. Each category of questions focuses on different combinations of 3D properties, such as object 3D location, 3D ground plane, camera extrinsic calibration, and/or object 3D poses.
+            </p>
+
+        </section>
+
+        <section id="opensource">
+            <h2 id="opensource">Open Source</h2>
+            <p style="text-align: justify;">
+                <b style="color: #002D72; position: relative; top: -3px;">SpatialReasoner codebase.</b> <img alt="Static Badge" src="https://img.shields.io/badge/GitHub-SpatialReasoner-000?logo=github&logoColor=fff">
+            </p>
+            <p style="text-align: justify;">
+                <b style="color: #002D72; position: relative; top: -3px;">Synthetic 3D data generation pipeline.</b> <img alt="Static Badge" src="https://img.shields.io/badge/GitHub-SpatialReasonerDataGen-000?logo=github&logoColor=fff">
+            </p>
+            <p style="text-align: justify;">
+                <b style="color: #002D72; position: relative; top: -3px;">SpatialReasoner models.</b> <img alt="Static Badge" src="https://img.shields.io/badge/Hugging%20Face-SpatialReasoner-FFD21E?logo=huggingface">
+            </p>
+            <p style="text-align: justify;">
+                <b style="color: #002D72; position: relative; top: -3px;">SpatialReasoner data.</b> <img alt="Static Badge" src="https://img.shields.io/badge/Hugging%20Face-SpatialReasoner%20Data-FFD21E?logo=huggingface">
+            </p>
+        </section>
+
+        <section id="key-findings">
+            <h2 id="key-findings">Key Findings</h2>
+            <p style="text-align: justify;">
+                <b style="color: #002D72;">State-of-the-art LMMs demonstrate limited 3D spatial reasoning capabilties.</b>
+            </p>
+            <div id="tab:model_ensemble" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th colspan="1" class="tb-hdr">Model</th>
+                            <th colspan="5" class="tb-hdr">3DSRBench-real</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>Overall</th>
+                            <th>Height</th>
+                            <th>Location</th>
+                            <th>Orientation</th>
+                            <th>Multi-Object</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><b><i>Baselines</i></b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Random</td>
+                            <td>20.9</td>
+                            <td>25.0</td>
+                            <td>25.0</td>
+                            <td>16.8</td>
+                            <td>20.1</td>
+                        </tr>
+                        <tr>
+                            <td>Random++</td>
+                            <td>45.8</td>
+                            <td>50.0</td>
+                            <td>50.0</td>
+                            <td>41.7</td>
+                            <td>45.0</td>
+                        </tr>
+                        <tr>
+                            <td><b><i>Open-sourced</i></b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>LLaVA-v1.5-7B <d-cite key="liu2023improvedllava"></d-cite></td>
+                            <td>36.8</td>
+                            <td>38.5</td>
+                            <td>46.4</td>
+                            <td>27.7</td>
+                            <td>31.8</td>
+                        </tr>
+                        <tr>
+                            <td>Cambrian-1-8B <d-cite key="tong2024cambrian"></d-cite></td>
+                            <td>44.1</td>
+                            <td>25.6</td>
+                            <td>57.0</td>
+                            <td>36.5</td>
+                            <td><u>43.1</u></td>
+                        </tr>
+                        <tr>
+                            <td>LLaVA-NeXT-8B <d-cite key="liu2024llavanext"></d-cite></td>
+                            <td class="highlight-green">49.6</td>
+                            <td><u>50.6</u></td>
+                            <td><u>62.7</u></td>
+                            <td><u>36.8</u></td>
+                            <td class="highlight-green">43.6</td>
+                        </tr>
+                        <tr>
+                            <td><b><i>Proprietary</i></b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Claude-Flash</td>
+                            <td>39.2</td>
+                            <td>39.8</td>
+                            <td>59.9</td>
+                            <td>13.2</td>
+                            <td>33.6</td>
+                        </tr>
+                        <tr>
+                            <td>Claude-Sonnect</td>
+                            <td>46.9</td>
+                            <td>49.6</td>
+                            <td>60.0</td>
+                            <td>32.8</td>
+                            <td>41.2</td>
+                        </tr>
+                        <tr>
+                            <td>Gemini-Pro</td>
+                            <td><u>49.1</u></td>
+                            <td class="highlight-green">50.8</td>
+                            <td class="highlight-green">62.9</td>
+                            <td class="highlight-green">37.5</td>
+                            <td>41.3</td>
+                        </tr>
+                        <tr>
+                            <td>GPT-4o-mini</td>
+                            <td>39.1</td>
+                            <td>42.1</td>
+                            <td>51.8</td>
+                            <td>23.4</td>
+                            <td>34.6</td>
+                        </tr>
+                        <tr>
+                            <td>GPT-4o</td>
+                            <td>45.3</td>
+                            <td>49.4</td>
+                            <td>62.3</td>
+                            <td>23.0</td>
+                            <td>40.1</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
+                    <b>Table 1.</b> 3D spaital reasoning capabilities of various LMMs on our 3DSRBench-real.
+                </figcaption>
+            </div>
+
+            <p style="text-align: justify;">
+                <b style="color: #002D72;">State-of-the-art LMMs exhibit signifcantly degraded 3D spatial reasoning performance when generalize from "common" to "uncommon" camera 6D viewpoints.</b>
+            </p>
+
+            <div id="tab:model_ensemble" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th colspan="1" class="tb-hdr">Model</th>
+                            <th colspan="3" class="tb-hdr">Camera 6D Viewpoints</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>Common</th>
+                            <th>Uncommon</th>
+                            <th>Change</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><b><i>Baselines</i></b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Random</td>
+                            <td>20.9</td>
+                            <td>20.9</td>
+                            <td><span style="color: #808080">+0.0%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Random++</td>
+                            <td>45.8</td>
+                            <td>45.8</td>
+                            <td><span style="color: #808080">+0.0%</span></td>
+                        </tr>
+                        <tr>
+                            <td><b><i>Open-sourced</i></b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>LLaVA-v1.5-7B <d-cite key="liu2023improvedllava"></d-cite></td>
+                            <td>42.0</td>
+                            <td>38.0</td>
+                            <td><span style="color: #f66b4d">-9.5%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Cambrian-1-8B <d-cite key="tong2024cambrian"></d-cite></td>
+                            <td>48.1</td>
+                            <td>39.9</td>
+                            <td><span style="color: #f66b4d">-17.0%</span></td>
+                        </tr>
+                        <tr>
+                            <td>LLaVA-NeXT-8B <d-cite key="liu2024llavanext"></d-cite></td>
+                            <td><u>45.5</u></td>
+                            <td><u>36.8</u></td>
+                            <td><span style="color: #f66b4d">-19.1%</span></td>
+                        </tr>
+                        <tr>
+                            <td><b><i>Proprietary</i></b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Claude-Flash</td>
+                            <td>44.6</td>
+                            <td>37.7</td>
+                            <td><span style="color: #f66b4d">-15.5%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Claude-Sonnect</td>
+                            <td>47.4</td>
+                            <td>39.4</td>
+                            <td><span style="color: #f66b4d">-16.9%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Gemini-Pro</td>
+                            <td>59.9</td>
+                            <td>49.5</td>
+                            <td><span style="color: #f66b4d">-17.4%</span></td>
+                        </tr>
+                        <tr>
+                            <td>GPT-4o-mini</td>
+                            <td>46.5</td>
+                            <td>40.3</td>
+                            <td><span style="color: #f66b4d">-13.3%</span></td>
+                        </tr>
+                        <tr>
+                            <td>GPT-4o</td>
+                            <td>51.2</td>
+                            <td>44.3</td>
+                            <td><span style="color: #f66b4d">-13.5%</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <figcaption style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
+                    <b>Table 2.</b> Degraded 3D spatial reasoning performance of LMMs when generalizing from common to uncommon camera 6D viewpoints.
+                </figcaption>
+            </div>
+
+            <p style="text-align: justify;">
+                <b style="color: #002D72;">Failure cases of GPT-4o on our 3DSRBench dataset.</b>
+            </p>
+
+            <d-figure id="fig5">
+                <figure>
+                    <img src="assets/images/3drbench_eg.png" alt="3DSRBench">
+                    <figcaption>
+                        <b>Figure 4.</b> Failure cases of GPT-4o on our 3DSRBench dataset.
+                    </figcaption>
+                </figure>
+            </d-figure>
+
+        </section>
+
+        <section id="misc">
+            <h2 id="misc">Miscellaneous</h2>
+            <p style="text-align: justify;">
+                <b>License.</b> Our 3DSRBench is released under the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a> license. By accessing and using our 3DSRBench, you agree to follow the terms of access specified <a href="https://creativecommons.org/licenses/by/4.0/legalcode.en">here</a>.
+            </p>
+            <p style="text-align: justify;">
+                <b>Ethics.</b> We follow the ethics guidelines at Johns Hopkins University and obtained Institutional Review Board (IRB) approvals prior to the start of our work. We described potential risks to the annotators and explained the purpose of the study and how the collected data would be used. All annotators agreed to join this project voluntarily and were paid by a fair amount as required at our institution.
+            </p>
+        </section>
+
+        </d-article>
+        <d-appendix>
+            <h3>BibTeX</h3>
+            <p class="bibtex">
+                @article{ma20243dsrbench,
+                &nbsp;&nbsp;title={3DSRBench: A Comprehensive 3D Spatial Reasoning Benchmark},
+                &nbsp;&nbsp;author={Ma, Wufei and Chen, Haoyu and Zhang, Guofeng and de Melo, Celso M and Yuille, Alan and Chen, Jieneng},
+                &nbsp;&nbsp;journal={arXiv preprint arXiv:2412.07825},
+                &nbsp;&nbsp;year={2024}
+                }
+            </p>
+
+            <h3>Notes</h3>
+            <p>This website template is adapted from <a href="https://image-sculpting.github.io">Image Sculpting</a>.</p>
+
+            <d-footnote-list></d-footnote-list>
+            <d-citation-list></d-citation-list>
+        </d-appendix>
+
+          <!-- bibliography will be inlined during Distill pipeline's pre-rendering -->
+        <d-bibliography src="bibliography.bib"></d-bibliography>
+
+        <!-- <script type="text/bibliography">
+
+        </script> -->
+        <script src="contents_bar.js"></script>
+
+        <script>
+
+
+            window.dataLayer = window.dataLayer || [];
+
+            function initSlider(sliderId) {
+                return new Splide(sliderId, {
+                    type: 'fade',
+                    rewind: true,
+                    perPage: 1,
+                    perMove: 1,
+                    focus: 'center',
+                    width: '100%',
+                    arrows: 'slider',
+                    drag: false,
+                    autoplay: true,
+                    speed: 1000,
+                    lazyLoad: 'nearby',
+                }).mount();
+            }
+
+
+            // Initialize sliders
+            var poseSlider = initSlider('#pose-slider');
+            var carvingSlider = initSlider('#carving-slider');
+            var compositionSlider = initSlider('#composition-slider');
+            var translationSlider = initSlider('#translation-slider');
+            var rotationSlider = initSlider('#rotation-slider');
+            var additionSlider = initSlider('#addition-slider');
+            var imageAngles = {
+                cat: ['0000', '0001', '0002', '0003', '0004', '0005', '0007', '0008', '0009'],
+                chair: ['0000', '0001', '0002', '0003', '0004', '0005', '0007', '0009'],
+                astronaut0: ['0000', '0001', '0002', '0003', '0004', '0006', '0007', '0008', '0009'],
+                joker: ['0000', '0003', '0004', '0005', '0008', '0009'],
+                astronaut1: ['0001', '0002', '0003', '0004', '0008', '0009'],
+                astronaut2: ['0000', '0001', '0003', '0006', '0008', '0009'],
+                lalaland: ['0000', '0001', '0003', '0008', '0009'],
+            };
+
+            // Function to display and refresh the Carving slider
+            function showCarvingSlider() {
+                var carvingContainer = document.getElementById('Carving');
+                carvingContainer.style.display = 'block';
+                carvingSlider.refresh();
+            }
+            function showCompositionSlider() {
+                var carvingContainer = document.getElementById('Composition');
+                carvingContainer.style.display = 'block';
+                compositionSlider.refresh();
+            }
+
+            function showTranslationSlider() {
+                var carvingContainer = document.getElementById('Translation');
+                carvingContainer.style.display = 'block';
+                translationSlider.refresh();
+            }
+
+            function showAdditionSlider() {
+                var carvingContainer = document.getElementById('Addition');
+                carvingContainer.style.display = 'block';
+                additionSlider.refresh();
+            }
+
+
+
+            function showRotationSlider() {
+                var carvingContainer = document.getElementById('Rotation');
+                carvingContainer.style.display = 'block';
+                rotationSlider.refresh();
+            }
+
+            function showPoseSlider() {
+                var carvingContainer = document.getElementById('Pose');
+                carvingContainer.style.display = 'block';
+                poseSlider.refresh();
+            }
+
+
+            function showCategory(categoryName) {
+                if (categoryName === 'Carving') {
+                    showCarvingSlider();
+                }
+                else if (categoryName === 'Composition') {
+                    showCompositionSlider();
+                }
+                else if (categoryName === 'Translation') {
+                    showTranslationSlider();
+                }
+                else if (categoryName === 'Addition') {
+                    showAdditionSlider();
+                }
+                else if (categoryName === 'Rotation') {
+                    showRotationSlider();
+                }
+                else if (categoryName === 'Pose') {
+                    showPoseSlider();
+                }
+                var categories = document.getElementsByClassName("category-content");
+                for (var i = 0; i < categories.length; i++) {
+                    categories[i].style.display = "none";
+                }
+                document.getElementById(categoryName).style.display = "block";
+                var buttons = document.querySelectorAll('.button-container button');
+                buttons.forEach(function(button) {
+                    button.classList.remove('active');
+                });
+
+                // Add 'active' class to the clicked button
+                event.currentTarget.classList.add('active');
+            }
+            function rotate(index, name) {
+                var imagePath = `assets/images/pose_rotation/${name}/pose0/${imageAngles[name][index]}.jpg`;
+                var rotateElements = document.getElementsByClassName('rotate-' + name);
+
+                // Update all instances of rotateElements
+                for (var i = 0; i < rotateElements.length; i++) {
+                    rotateElements[i].src = imagePath;
+                }
+
+                var updatedOrientation = 90 + 36 * parseInt(imageAngles[name][index]);
+                var modelOrientation = updatedOrientation + "deg 270deg 180deg";
+                var rotationAfterElements = document.getElementsByClassName(name + '-rotation-after');
+
+                // Update all instances of rotationAfterElements
+                for (var j = 0; j < rotationAfterElements.length; j++) {
+                    rotationAfterElements[j].setAttribute('orientation', modelOrientation);
+                }
+            }
+
+
+
+            function updateRotation(direction, model) {
+                var currentRotationElement = document.getElementById('rotation' + model);
+                var currentRotationIndex = parseInt(currentRotationElement.value);
+                currentRotationIndex += direction;
+
+                if (currentRotationIndex < 0) currentRotationIndex = imageAngles[model].length - 1;
+                if (currentRotationIndex >= imageAngles[model].length) currentRotationIndex = 0;
+                currentRotationElement.value = currentRotationIndex;
+
+                rotate(currentRotationIndex, model);
+
+                var rotationDisplays = document.getElementsByClassName("rotationDisplay" + model);
+
+
+                for (var i = 0; i < rotationDisplays.length; i++) {
+                    rotationDisplays[i].textContent = "Rotation: " + 36 * imageAngles[model][currentRotationIndex] + "°";
+                }
+            }
+
+
+            function updateAddition(direction, model) {
+                var currentAdditionElement = document.getElementById('addition' + model);
+                var currentAdditionIndex = parseInt(currentAdditionElement.value);
+                currentAdditionIndex += direction;
+                currentAdditionIndex = Math.max(0, Math.min(currentAdditionIndex, 4));
+                currentAdditionElement.value = currentAdditionIndex;
+                // Toggle visibility of the plus and minus buttons using their IDs
+                var plusButton = document.getElementById('plusButton' + model);
+                var minusButton = document.getElementById('minusButton' + model);
+
+                plusButton.style.visibility = currentAdditionIndex >= 4 ? 'hidden' : 'visible';
+                minusButton.style.visibility = currentAdditionIndex <= 0 ? 'hidden' : 'visible';
+
+                addObject(currentAdditionIndex, model);
+                var additionDisplay = document.getElementsByClassName("additionDisplay" + model);
+                for (var j=0; j < additionDisplay.length; j++) {
+                    additionDisplay[j].textContent = "Number of Objects: " + currentAdditionIndex;
+                }
+
+
+            }
+
+            function addObject(num, name) {
+                var meshPath = `assets/meshes/addition/${name}_${num}.glb`;
+                var imagePath = `assets/images/addition/${name}/${num}.jpg`;
+                var allMesh = document.getElementsByClassName(name + "-after-add");
+                var allImg = document.getElementsByClassName("add-" + name);
+                for (var i = 0; i < allMesh.length; i++) {
+                    allMesh[i].src = meshPath;
+                    allImg[i].src = imagePath;
+                }
+
+                additionSlider.refresh();
+            }
+
+
+        </script>
+
+
+    </body>
+</html>
